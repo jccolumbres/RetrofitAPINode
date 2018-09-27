@@ -50,7 +50,18 @@ app.get('/messages', function (req, res) {
 })
 
 app.get('/ideas', function (req, res) {
-    res.end(JSON.stringify(ideas));
+    var count = req.query.count != undefined ? req.query.count : req.query.count = 100;
+    if (req.query.owner){
+        var ownerIdeas = ideas.filter(function(idea){
+            return idea.owner == req.query.owner
+        });
+        setTimeout(function(){
+            res.end(JSON.stringify(ownerIdeas.slice(0,count)));
+        },7000)
+    }
+    setTimeout(function(){
+        res.end(JSON.stringify(ideas));
+    },7000)
 })
 
 app.get('/ideas/:id', function (req, res) {
@@ -83,7 +94,7 @@ app.put('/ideas/:id', function (req, res) {
             ideas[i].name = req.body.name;
             ideas[i].owner = req.body.owner;
             ideas[i].description = req.body.description;
-            ideas[i].isComplete = req.body.status;
+            ideas[i].status = req.body.status;
             idea = ideas[i];
         }
     }
